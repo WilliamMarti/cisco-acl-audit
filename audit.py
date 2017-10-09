@@ -1,6 +1,16 @@
 import sys
 from netmiko import ConnectHandler
 
+def diff(first, second):
+        second = set(second)
+        return [item for item in first if item not in second]
+
+
+def printArray(arr):
+
+    for line in arr:
+
+        print line
 
 
 def main(hostname, username, password):
@@ -77,7 +87,7 @@ def main(hostname, username, password):
 
         found = False
 
-        for cline in configlines:
+        for cline in appliedacls:
 
             if aline in cline:
 
@@ -89,44 +99,23 @@ def main(hostname, username, password):
             aclsnotfound.append(aline)
             found = False
 
-    print aclsnotfound
+    printArray(aclsnotfound)
 
     print "\n=====================================\n"
 
     print "ACLs Used But Not Defined -- \n"
 
+    # Get ACLs applied but not defined
+    notdefined = diff(appliedacls, acllist)
 
-    aclsnotdefined = []
-
-    for aline in appliedacls:
-
-        found = False
-
-        for cline in acllist:
-
-            if aline in cline:
-
-                found = True
-                break
-
-        if found == False:
-
-            aclsnotdefined.append(aline)
-            found = False
-
-
-    print aclsnotdefined
-
-    print "\n Test \n"
-
-    print set(appliedacls).symmetric_difference(set(acllist)
+    printArray(notdefined)
 
 
 #boiler plate setup
 if __name__ == "__main__":
 
-  hostname = sys.argv[1]
-  username = sys.argv[2]
-  password = sys.argv[3]
+    hostname = sys.argv[1]
+    username = sys.argv[2]
+    password = sys.argv[3]
 
-  main(hostname, username, password)
+    main(hostname, username, password)
