@@ -66,6 +66,8 @@ def main(hostname, username, password):
 
     print "\n=====================================\n"
 
+    print "ACLs Defined But Not Used -- \n"
+
     aclsfound = []
     aclsnotfound = []
 
@@ -87,11 +89,37 @@ def main(hostname, username, password):
             aclsnotfound.append(aline)
             found = False
 
-
-    print "ACLs Defined But Not Used -- \n"
     print aclsnotfound
 
+    print "\n=====================================\n"
 
+    print "ACLs Used But Not Defined -- \n"
+
+
+    aclsnotdefined = []
+
+    for aline in appliedacls:
+
+        found = False
+
+        for cline in acllist:
+
+            if aline in cline:
+
+                found = True
+                break
+
+        if found == False:
+
+            aclsnotdefined.append(aline)
+            found = False
+
+
+    print aclsnotdefined
+
+    print "\n Test \n"
+
+    print set(appliedacls).symmetric_difference(set(acllist)
 
 
 #boiler plate setup
