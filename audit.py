@@ -34,11 +34,13 @@ def main(hostname, username, password):
 
         acllist.append(line.strip())
 
+    print "Found ACLS -- \n"
+
     for acl in acllist:
 
         print acl
 
-    print "====================================="
+    print "\n=====================================\n"
 
 
     ## Get Config
@@ -51,25 +53,43 @@ def main(hostname, username, password):
 
         configlines.append(line.strip())
 
+    print "Applied ACLs --\n"
+
+    appliedacls = []
+
     for line in configlines:
 
-        print line
+        applied = line.split()[2]
 
-    print "====================================="
+        print applied
+        appliedacls.append(applied)
+
+    print "\n=====================================\n"
 
     aclsfound = []
+    aclsnotfound = []
+
     found = False
 
-    for cline in configlines:
+    for aline in acllist:
 
-        for aline in acllist:
+        found = False
+
+        for cline in configlines:
 
             if aline in cline:
 
-                aclsfound.append(aline)
+                found = True
                 break
 
-    print aclsfound
+        if found == False:
+
+            aclsnotfound.append(aline)
+            found = False
+
+
+    print "ACLs Defined But Not Used -- \n"
+    print aclsnotfound
 
 
 
