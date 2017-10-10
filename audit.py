@@ -1,116 +1,127 @@
 import sys
 from netmiko import ConnectHandler
 
-def diff(first, second):
-        second = set(second)
-        return [item for item in first if item not in second]
 
 
-def printArray(arr):
-
-    assert not isinstance(lst, basestring)
-        raise TypeError('Please provide a list argument')
-    
-    for line in arr:
-
-        print line
+class Audit():
 
 
-def main(hostname, username, password):
+
+    def diff(self, first, second):
+            second = set(second)
+            return [item for item in first if item not in second]
 
 
-    cisco_device = {
-        'device_type': 'cisco_ios',
-        'ip':   hostname,
-        'username': username,
-        'password': password,
-    }
+    def printArray(self, arr):
 
-    try:
+        if not isinstance (arr, list):
+            raise TypeError('Please provide a List argument')
 
-        net_connect = ConnectHandler(**cisco_device)
+        output = ""
 
-    except:
+        for line in arr:
 
-        print "Could not connect to host"
-        sys.exit
+            output += str(line) + "\n"
 
-    # get ACLs
-    acls = net_connect.send_command('sh access-lists | i list')
-    acls = acls.split("\n")
-
-    acllist = []
-
-    for line in acls:
-
-        line = line.split("list")[1]
-
-        acllist.append(line.strip())
-
-    print "Found ACLS -- \n"
-
-    printArray(acllist)
-
-    print "\n=====================================\n"
+        return output
 
 
-    ## Get Config
-    config = net_connect.send_command_expect('sh run | i access-group')
-    config = config.split("\n")
 
-    configlines = []
+    def main(self, hostname, username, password):
 
-    for line in config:
 
-        configlines.append(line.strip())
+        cisco_device = {
+            'device_type': 'cisco_ios',
+            'ip':   hostname,
+            'username': username,
+            'password': password,
+        }
 
-    print "Applied ACLs --\n"
+        try:
 
-    appliedacls = []
+            net_connect = ConnectHandler(**cisco_device)
 
-    for line in configlines:
+        except:
 
-        applied = line.split()[2]
+            print "Could not connect to host"
+            sys.exit
 
-        appliedacls.append(applied)
+        # get ACLs
+        acls = net_connect.send_command('sh access-lists | i list')
+        acls = acls.split("\n")
 
-        print applied
+        acllist = []
 
-    print "\n=====================================\n"
+        for line in acls:
 
-    print "ACLs Defined But Not Used -- \n"
+            line = line.split("list")[1]
 
-    aclsfound = []
-    aclsnotfound = []
+            acllist.append(line.strip())
 
-    found = False
+        print "Found ACLS -- \n"
 
-    for aline in acllist:
+        print self.printArray(acllist)
+
+        print "\n=====================================\n"
+
+
+        ## Get Config
+        config = net_connect.send_command_expect('sh run | i access-group')
+        config = config.split("\n")
+
+        configlines = []
+
+        for line in config:
+
+            configlines.append(line.strip())
+
+        print "Applied ACLs --\n"
+
+        appliedacls = []
+
+        for line in configlines:
+
+            applied = line.split()[2]
+
+            appliedacls.append(applied)
+
+            print applied
+
+        print "\n=====================================\n"
+
+        print "ACLs Defined But Not Used -- \n"
+
+        aclsfound = []
+        aclsnotfound = []
 
         found = False
 
-        for cline in appliedacls:
+        for aline in acllist:
 
-            if aline in cline:
-
-                found = True
-                break
-
-        if found == False:
-
-            aclsnotfound.append(aline)
             found = False
 
-    printArray(aclsnotfound)
+            for cline in appliedacls:
 
-    print "\n=====================================\n"
+                if aline in cline:
 
-    print "ACLs Used But Not Defined -- \n"
+                    found = True
+                    break
 
-    # Get ACLs applied but not defined
-    notdefined = diff(appliedacls, acllist)
+            if found == False:
 
-    printArray(notdefined)
+                aclsnotfound.append(aline)
+                found = False
+
+        print self.printArray(aclsnotfound)
+
+        print "\n=====================================\n"
+
+        print "ACLs Used But Not Defined -- \n"
+
+        # Get ACLs applied but not defined
+        notdefined = self.diff(appliedacls, acllist)
+
+        print self.printArray(notdefined)
 
 
 #boiler plate setup
@@ -120,4 +131,7 @@ if __name__ == "__main__":
     username = sys.argv[2]
     password = sys.argv[3]
 
-    main(hostname, username, password)
+    audit = Audit()
+
+    audit.main(hostname, username, password)
+
