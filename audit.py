@@ -90,8 +90,6 @@ class Audit():
 
         appliedacls = []
 
-        print type(net_connect)
-
         configlines = self.searchConfig(net_connect, 'sh run | i access-group')
 
         for line in configlines:
