@@ -6,16 +6,21 @@ from netmiko import ConnectHandler
 class Audit():
 
 
-
+    # Return a List of the differences of 2 Lists
     def diff(self, first, second):
-            second = set(second)
-            return [item for item in first if item not in second]
 
+        if not isinstance (first, list) or not isinstance (second, list):
+            raise TypeError('Please provide List type arguments')
 
+        second = set(second)
+
+        return [item for item in first if item not in second]
+
+    # Return a String object of every line of the passed array
     def printArray(self, arr):
 
         if not isinstance (arr, list):
-            raise TypeError('Please provide a List argument')
+            raise TypeError('Please provide a List type argument')
 
         output = ""
 
@@ -25,8 +30,25 @@ class Audit():
 
         return output
 
+    # Run Search command for passed in Cisco IOS object
+    def searchConfig(self, connector, searchtext):
+
+        if not isinstance (searchtext, str):
+            raise TypeError('Please provide a String type argument')
+
+        config = connector.send_command_expect(searchtext)
+        config = config.split("\n")
+
+        configlines = []
+
+        for line in config:
+
+            configlines.append(line.strip())
 
 
+        return configlines
+
+    # Main method
     def main(self, hostname, username, password):
 
 
@@ -64,20 +86,13 @@ class Audit():
 
         print ("\n=====================================\n")
 
-
-        ## Get Config
-        config = net_connect.send_command_expect('sh run | i access-group')
-        config = config.split("\n")
-
-        configlines = []
-
-        for line in config:
-
-            configlines.append(line.strip())
-
         print ("Applied ACLs --\n")
 
         appliedacls = []
+
+        print type(net_connect)
+
+        configlines = self.searchConfig(net_connect, 'sh run | i access-group')
 
         for line in configlines:
 
@@ -85,7 +100,30 @@ class Audit():
 
             appliedacls.append(applied)
 
-            print (applied)
+
+        configlines = self.searchConfig(net_connect, 'sh run | i match ip address')
+
+
+
+        for line in configlines:
+
+            applied = line.split()[3]
+
+            appliedacls.append(applied)
+
+
+        configlines = self.searchConfig(net_connect, 'sh run | i snmp-server community')
+
+
+
+
+        for line in configlines:
+
+            applied = line.split()[4]
+
+            appliedacls.append(applied)
+
+        print (self.printArray(appliedacls))
 
         print ("\n=====================================\n")
 
