@@ -8,6 +8,9 @@ def diff(first, second):
 
 def printArray(arr):
 
+    assert not isinstance(lst, basestring)
+        raise TypeError('Please provide a list argument')
+    
     for line in arr:
 
         print line
