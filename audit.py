@@ -46,9 +46,7 @@ def main(hostname, username, password):
 
     print "Found ACLS -- \n"
 
-    for acl in acllist:
-
-        print acl
+    printArray(acllist)
 
     print "\n=====================================\n"
 
@@ -71,8 +69,9 @@ def main(hostname, username, password):
 
         applied = line.split()[2]
 
-        print applied
         appliedacls.append(applied)
+
+        print applied
 
     print "\n=====================================\n"
 
