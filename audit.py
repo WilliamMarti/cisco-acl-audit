@@ -43,7 +43,7 @@ class Audit():
 
         except:
 
-            print "Could not connect to host"
+            print ("Could not connect to host")
             sys.exit
 
         # get ACLs
@@ -58,11 +58,11 @@ class Audit():
 
             acllist.append(line.strip())
 
-        print "Found ACLS -- \n"
+        print ("Found ACLS -- \n")
 
-        print self.printArray(acllist)
+        print (self.printArray(acllist))
 
-        print "\n=====================================\n"
+        print ("\n=====================================\n")
 
 
         ## Get Config
@@ -75,7 +75,7 @@ class Audit():
 
             configlines.append(line.strip())
 
-        print "Applied ACLs --\n"
+        print ("Applied ACLs --\n")
 
         appliedacls = []
 
@@ -87,9 +87,9 @@ class Audit():
 
             print applied
 
-        print "\n=====================================\n"
+        print ("\n=====================================\n")
 
-        print "ACLs Defined But Not Used -- \n"
+        print ("ACLs Defined But Not Used -- \n")
 
         aclsfound = []
         aclsnotfound = []
@@ -112,16 +112,16 @@ class Audit():
                 aclsnotfound.append(aline)
                 found = False
 
-        print self.printArray(aclsnotfound)
+        print (self.printArray(aclsnotfound))
 
-        print "\n=====================================\n"
+        print ("\n=====================================\n")
 
-        print "ACLs Used But Not Defined -- \n"
+        print ("ACLs Used But Not Defined -- \n")
 
         # Get ACLs applied but not defined
         notdefined = self.diff(appliedacls, acllist)
 
-        print self.printArray(notdefined)
+        print (self.printArray(notdefined))
 
 
 #boiler plate setup
