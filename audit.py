@@ -85,7 +85,7 @@ class Audit():
 
             appliedacls.append(applied)
 
-            print applied
+            print (applied)
 
         print ("\n=====================================\n")
 
