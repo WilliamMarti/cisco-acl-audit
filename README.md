@@ -1,13 +1,13 @@
 # Cisco ACL Aduit 
-[![Build Status](https://travis-ci.org/WilliamMarti/Cisco-ACL-Audit.svg?branch=master)](https://travis-ci.org/WilliamMarti/Cisco-ACL-Audit)
+[![Build Status](https://travis-ci.org/WilliamMarti/cisco-acl-audit.svg?branch=master)](https://travis-ci.org/WilliamMarti/cisco-acl-audit)
 
 
 1. Print a list of all Access Lists on device
-2. Print a list of all applied Access Lists
-  * Check for 'access-group' in interfaces
-  * Check for 'match ip address' in route-maps
-  * Check for 'snmp-server community' for SNMP community strings
-3. Print a list of Access Lists that are not used
+1. Print a list of all applied Access Lists
+ 1. Check for 'access-group' in interfaces
+ 1. Check for 'match ip address' in route-maps
+ 1. Check for 'snmp-server community' for SNMP community strings
+1. Print a list of Access Lists that are not used
 
 Usage:
 
