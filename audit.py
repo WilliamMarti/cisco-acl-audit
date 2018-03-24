@@ -72,17 +72,23 @@ class Audit():
         acls = net_connect.send_command('sh access-lists | i list')
         acls = acls.split("\n")
 
-        acllist = []
+        if len(acls) == 0:
 
-        for line in acls:
+            print ("No ACLs defined")
 
-            line = line.split("list")[1]
+        else:
 
-            acllist.append(line.strip())
+            acllist = []
 
-        print ("Found ACLS -- \n")
+            for line in acls:
 
-        print (self.printArray(acllist))
+                line = line.split("list")[1]
+
+                acllist.append(line.strip())
+
+            print ("Found ACLS -- \n")
+
+            print (self.printArray(acllist))
 
         print ("\n=====================================\n")
 
@@ -90,38 +96,55 @@ class Audit():
 
         appliedacls = []
 
-        configlines = self.searchConfig(net_connect, 'sh run | i access-group')
+        accessgroup = self.searchConfig(net_connect, 'sh run | i access-group')
 
-        for line in configlines:
+        #print map(str, accessgroup)
 
-            applied = line.split()[2]
+        if accessgroup[0] == '':
 
-            appliedacls.append(applied)
+            print ("No access groups found")
 
+        else:
 
-        configlines = self.searchConfig(net_connect, 'sh run | i match ip address')
+            for line in accessgroup:
 
+                applied = line.split()[2]
 
-
-        for line in configlines:
-
-            applied = line.split()[3]
-
-            appliedacls.append(applied)
-
-
-        configlines = self.searchConfig(net_connect, 'sh run | i snmp-server community')
+                appliedacls.append(applied)
 
 
 
+        matchipaddress = self.searchConfig(net_connect, 'sh run | i match ip address')
 
-        for line in configlines:
 
-            applied = line.split()[4]
+        if matchipaddress[0] == '':
 
-            appliedacls.append(applied)
+            print ("No ACLs for route maps found")
 
-        print (self.printArray(appliedacls))
+        else:
+
+            for line in matchipaddress:
+
+                applied = line.split()[3]
+
+                appliedacls.append(applied)
+
+
+        snmpcommunity = self.searchConfig(net_connect, 'sh run | i snmp-server community')
+
+        if snmpcommunity[0] == '':
+
+            print ("No ACLs for SNMP found")
+
+        else:
+
+            for line in snmpcommunity:
+
+                applied = line.split()[4]
+
+                appliedacls.append(applied)
+
+            print (self.printArray(appliedacls))
 
         print ("\n=====================================\n")
 
