@@ -1,4 +1,4 @@
-# Cisco ACL Aduit 
+# Cisco ACL Audit 
 [![Build Status](https://travis-ci.org/WilliamMarti/cisco-acl-audit.svg?branch=master)](https://travis-ci.org/WilliamMarti/cisco-acl-audit)
 
 
